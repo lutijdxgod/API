@@ -31,12 +31,15 @@ class PostResponse(PostBase):
     class Config:
         orm_mode = True
 
+
 class PostOut(BaseModel):
     Post: PostResponse
     votes: int
-    
+
 
 class UserCreate(BaseModel):
+    name: str
+    surname: str
     email: EmailStr
     password: str
 
@@ -53,6 +56,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+
 
 class Vote(BaseModel):
     post_id: int
