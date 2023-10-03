@@ -49,6 +49,15 @@ class UserLogin(BaseModel):
     password: str
 
 
+class UserVerifyEmail(BaseModel):
+    email: EmailStr
+
+
+# class CheckValidity(BaseModel):
+#     email: EmailStr
+#     code: int
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
