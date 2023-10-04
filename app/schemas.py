@@ -53,6 +53,12 @@ class UserVerifyEmail(BaseModel):
     email: EmailStr
 
 
+class ResetPassword(BaseModel):
+    email: EmailStr
+    password: str
+    verification_code: int
+
+
 # class CheckValidity(BaseModel):
 #     email: EmailStr
 #     code: int

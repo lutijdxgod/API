@@ -35,7 +35,7 @@ async def login(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/email-reset")
+@router.post("/password-reset")
 async def email_reset(
     recepient_email: schemas.UserVerifyEmail, db: Session = Depends(database.get_db)
 ):
@@ -73,10 +73,10 @@ async def email_reset(
     )
     db.commit()
 
-    return {"message": f"Код подтверждения отправлен на почту {recepient_email}"}
+    return {"message": f"Код подтверждения отправлен на почту {recepient_email.email}"}
 
 
-@router.get("/email-reset")
+@router.get("/password-reset")
 async def verify_code_email(
     verification_code: int, email: str, db: Session = Depends(database.get_db)
 ):
@@ -91,6 +91,24 @@ async def verify_code_email(
             detail="Неправильный код подтверждения",
         )
 
-    check_validity.update({"verification_code": ""})
-
     return {"message": "Верный код"}
+
+
+@router.put("/password-reset")
+async def reset_password(
+    data: schemas.ResetPassword, db: Session = Depends(database.get_db)
+):
+    email = data.email
+    verification_code = data.verification_code
+    password_to_change = data.password
+
+    user_query = db.query(models.User).filter(
+        models.User.email == email, models.User.verification_code == verification_code
+    )
+
+    user_query.update(
+        {"password": utils.hash(password_to_change), "verification_code": None}
+    )
+    db.commit()
+
+    return {"message": "success"}
