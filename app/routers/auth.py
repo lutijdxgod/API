@@ -22,12 +22,14 @@ async def login(
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Неправильные почта или пароль",
         )
 
     if not utils.verify_hashes(user_credentials.password, user.password):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Неправильные почта или пароль",
         )
 
     access_token = oauth2.create_access_token(data={"user_id": user.id})
@@ -46,7 +48,7 @@ async def email_reset(
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="No such user"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не существует"
         )
 
     try:
@@ -111,4 +113,4 @@ async def reset_password(
     )
     db.commit()
 
-    return {"message": "success"}
+    return {"message": "Пароль успешно изменён"}
