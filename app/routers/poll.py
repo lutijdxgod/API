@@ -52,11 +52,18 @@ async def get_active_polls(db: Session = Depends(database.get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="В данный момент нет активных опросов",
         )
-    active_polls = [
-        (jsonable_encoder(i)["id"], jsonable_encoder(i)["title"])
-        for i in active_polls_query.all()
-    ]
-    for id, title in active_polls:
+    # active_polls = [
+    #     (jsonable_encoder(i)["id"], jsonable_encoder(i)["title"], jsonable_encoder(i)["title"])
+    #     for i in active_polls_query.all()
+    # ]
+    active_polls = []
+    for i in active_polls_query.all():
+        get_query = jsonable_encoder(i)
+        active_polls.append(
+            (get_query["id"], get_query["title"], get_query["is_anonymous"])
+        )
+
+    for id, title, anonymity in active_polls:
         title_questions_query = db.query(models.PollQuestion).filter(
             models.PollQuestion.poll_id == id
         )
@@ -69,7 +76,9 @@ async def get_active_polls(db: Session = Depends(database.get_db)):
             entry.pop("entry_id")
             to_return_questions.append(entry)
 
-        return_data.append({title: to_return_questions})
+        return_data.append(
+            {"name": title, "polls": to_return_questions, "is_anonymous": anonymity}
+        )  # polls это вопросы(Антоха попросил так назвать)
 
     return return_data
 

@@ -98,3 +98,10 @@ class PollResponse(BaseModel):
 class PollQuestions(BaseModel):
     poll_id: int
     questions_answers: list
+
+
+class ProblemCreate(BaseModel):
+    creator_id: int
+    title: str
+    content: str
+    tags: Optional[List[str]] = []
