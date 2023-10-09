@@ -22,12 +22,6 @@ def upgrade() -> None:
         "polls",
         sa.Column("is_anonymous", sa.Boolean(), server_default="False", nullable=False),
     )
-    op.add_column(
-        "polls",
-        sa.Column(
-            "retractable_choices", sa.Boolean(), server_default="True", nullable=False
-        ),
-    )
     op.add_column("polls", sa.Column("creator_id", sa.Integer(), nullable=True))
     op.add_column(
         "polls",
@@ -54,6 +48,5 @@ def downgrade() -> None:
     op.drop_constraint("polls_creator_id_fkey", "polls", type_="foreignkey")
     op.drop_column("polls", "created_at")
     op.drop_column("polls", "creator_id")
-    op.drop_column("polls", "retractable_choices")
     op.drop_column("polls", "is_anonymous")
     # ### end Alembic commands ###

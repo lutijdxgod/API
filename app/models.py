@@ -5,21 +5,21 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-# class Post(Base):
-#     __tablename__ = "posts"
+class Post(Base):
+    __tablename__ = "posts"
 
-#     id = Column(Integer, primary_key=True, nullable=False)
-#     title = Column(String, nullable=False)
-#     content = Column(String, nullable=False)
-#     published = Column(Boolean, server_default="True", nullable=False)
-#     created_at = Column(
-#         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
-#     )
-#     owner_id = Column(
-#         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-#     )
+    id = Column(Integer, primary_key=True, nullable=False)
+    title = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    published = Column(Boolean, server_default="True", nullable=False)
+    created_at = Column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
+    )
+    owner_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
 
-#     owner = relationship("User")
+    owner = relationship("User")
 
 
 class User(Base):
@@ -43,9 +43,10 @@ class Poll(Base):
     __tablename__ = "polls"
 
     id = Column(Integer, primary_key=True, nullable=False)
+    is_active = Column(Boolean, server_default="True", nullable=False)
     title = Column(String, nullable=False)
     is_anonymous = Column(Boolean, server_default="False", nullable=False)
-    retractable_choices = Column(Boolean, server_default="True", nullable=False)
+    # retractable_choices = Column(Boolean, server_default="True", nullable=False)
     creator_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
@@ -62,9 +63,9 @@ class PollQuestion(Base):
         nullable=False,
     )
     question = Column(String, nullable=False)
-    answers = Column(
-        ARRAY(String, dimensions=1, zero_indexes=True), nullable=False
-    )  # JSON
+    answers = Column(ARRAY(String, dimensions=1, zero_indexes=True), nullable=False)
+    min_responses = Column(Integer, server_default="1", nullable=False)
+    max_responses = Column(Integer, server_default="1", nullable=False)
 
 
 # ----------------2version----------------

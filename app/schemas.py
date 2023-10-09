@@ -1,6 +1,6 @@
-from pydantic import BaseModel, EmailStr, conint
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class PostBase(BaseModel):
@@ -73,6 +73,28 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 
 
-class Vote(BaseModel):
-    post_id: int
-    dir: conint(le=1)
+# class Vote(BaseModel):
+#     post_id: int
+#     dir: conint(le=1)
+
+
+class PollCreate(BaseModel):
+    title: str
+    creator_id: int
+    is_anonymous: Optional[bool] = False
+    is_active: Optional[bool] = True
+
+
+class PollResponse(BaseModel):
+    id: int
+    title: str
+    creator_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class PollQuestions(BaseModel):
+    poll_id: int
+    questions_answers: list
