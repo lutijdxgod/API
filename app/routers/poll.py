@@ -47,6 +47,11 @@ async def get_active_polls(db: Session = Depends(database.get_db)):
     return_data = []
 
     active_polls_query = db.query(models.Poll).filter(models.Poll.is_active == "True")
+    if not (active_polls_query.first()):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="В данный момент нет активных опросов",
+        )
     active_polls = [
         (jsonable_encoder(i)["id"], jsonable_encoder(i)["title"])
         for i in active_polls_query.all()
