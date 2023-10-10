@@ -34,6 +34,7 @@ class User(Base):
     sex = Column(String)
     verification_code = Column(Integer, unique=True)
     password = Column(String, nullable=False)
+    profile_image = Column(String, nullable=True)
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
@@ -88,10 +89,11 @@ class Problem(Base):
     __tablename__ = "problems"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    creator_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
+    creator_id = Column(Integer, ForeignKey("users.id", ondelete="NO ACTION"))
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
-    # photos
+    images = Column(ARRAY(String, dimensions=1, zero_indexes=True), nullable=True)
+    is_solved = Column(Boolean, server_default="False", nullable=False)
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
@@ -108,7 +110,7 @@ class ProblemTags(Base):
     __tablename__ = "problem_tags"
 
     problem_id = Column(
-        Integer, ForeignKey("problems.id", ondelete="SET NULL"), primary_key=True
+        Integer, ForeignKey("problems.id", ondelete="CASCADE"), primary_key=True
     )
     tags = Column(ARRAY(Integer, dimensions=1, zero_indexes=True), server_default="{}")
 

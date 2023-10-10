@@ -104,4 +104,5 @@ class ProblemCreate(BaseModel):
     creator_id: int
     title: str
     content: str
-    tags: Optional[List[str]] = []
+    images: Optional[List[str]] = []
+    # tags: Optional[List[str]] = []

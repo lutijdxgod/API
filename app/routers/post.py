@@ -50,7 +50,6 @@ async def create_post(
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
-    print(current_user)
 
     return new_post
 
