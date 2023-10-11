@@ -42,12 +42,19 @@ async def post_problem(
 
 
 @router.get("/problem")
-async def get_problem(db: Session = Depends(database.get_db)):
-    problems_query = db.query(models.Problem).filter(models.Problem.is_solved == False)
+async def get_problem(
+    limit: int = 10, skip: int = 0, db: Session = Depends(database.get_db)
+):
+    problems_query = (
+        db.query(models.Problem)
+        .filter(models.Problem.is_solved == False)
+        .limit(limit)
+        .offset(skip)
+    )
     if not problems_query.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Сейчас нет проблем, которые нужно помочь устранить",
+            detail="В данный момент нет проблем, которые нужно помочь устранить",
         )
     problem_list = []
     for problem in problems_query.all():

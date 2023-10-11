@@ -105,4 +105,3 @@ class ProblemCreate(BaseModel):
     title: str
     content: str
     images: Optional[List[str]] = []
-    # tags: Optional[List[str]] = []

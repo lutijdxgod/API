@@ -104,6 +104,7 @@ class Tags(Base):
 
     tag_id = Column(Integer, primary_key=True, nullable=False)
     tag = Column(String, nullable=False, unique=True)
+    info = Column(String, nullable=True)
 
 
 class ProblemTags(Base):
