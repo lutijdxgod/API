@@ -66,6 +66,7 @@ async def get_problem(
             {
                 "creator_name": creator["name"] + " " + creator["surname"],
                 "creator_profile_image": creator["profile_image"],
+                "creator_role": creator["role"],
             }
         )
         problem.pop("is_solved")  # убрал ненужный параметр при выводе
