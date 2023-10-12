@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from .. import database, schemas, models
+from .. import database, schemas, models, oauth2
 from ..config import settings
 
 router = APIRouter(prefix="/polls", tags=["Polls"])
