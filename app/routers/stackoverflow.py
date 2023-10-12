@@ -59,6 +59,15 @@ async def get_problem(
     problem_list = []
     for problem in problems_query.all():
         problem = jsonable_encoder(problem)
+        creator_id = problem["creator_id"]
+        creator_query = db.query(models.User).filter(models.User.id == creator_id)
+        creator = jsonable_encoder(creator_query.first())
+        problem.update(
+            {
+                "creator_name": creator["name"] + " " + creator["surname"],
+                "creator_profile_image": creator["profile_image"],
+            }
+        )
         problem.pop("is_solved")  # убрал ненужный параметр при выводе
         tags_query = db.query(models.ProblemTags).filter(
             models.ProblemTags.problem_id == problem["id"]
