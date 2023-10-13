@@ -92,8 +92,44 @@ class Problem(Base):
     creator_id = Column(Integer, ForeignKey("users.id", ondelete="NO ACTION"))
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
-    images = Column(ARRAY(String, dimensions=1, zero_indexes=True), nullable=True)
+    images = Column(
+        ARRAY(String, dimensions=1, zero_indexes=True),
+        nullable=True,
+        server_default="{}",
+    )
     is_solved = Column(Boolean, server_default="False", nullable=False)
+    created_at = Column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
+    )
+
+
+class ProblemAnswers(Base):
+    __tablename__ = "problem_answers"
+
+    entry_id = Column(Integer, primary_key=True, nullable=False)
+    problem_id = Column(Integer, ForeignKey("problems.id", ondelete="CASCADE"))
+    creator_id = Column(Integer, ForeignKey("users.id", ondelete="NO ACTION"))
+    content = Column(String, nullable=False)
+    images = Column(ARRAY(String, dimensions=1, zero_indexes=True), nullable=True)
+    comments = Column(
+        ARRAY(Integer, dimensions=1, zero_indexes=True),
+        nullable=True,
+        server_default="{}",
+    )
+    created_at = Column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
+    )
+
+
+class ProblemAnswersComments(Base):
+    __tablename__ = "problem_answers_comments"
+
+    entry_id = Column(Integer, primary_key=True, nullable=False)
+    problem_answer_id = Column(
+        Integer, ForeignKey("problem_answers.entry_id"), nullable=False
+    )
+    creator_id = Column(Integer, ForeignKey("users.id", ondelete="NO ACTION"))
+    content = Column(String, nullable=False)
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )

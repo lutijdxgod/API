@@ -105,3 +105,16 @@ class ProblemCreate(BaseModel):
     title: str
     content: str
     images: Optional[List[str]] = []
+
+
+class ProblemAnswerCreate(BaseModel):
+    problem_id: int
+    creator_id: int
+    content: str
+    images: Optional[List[str]] = []
+
+
+class ProblemAnswerCommentCreate(BaseModel):
+    problem_answer_id: int
+    creator_id: int
+    content: str
