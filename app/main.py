@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine
-from .routers import post, user, auth, poll, stackoverflow
+from .routers import post, user, auth, poll, stackoverflow, news
 
 
 # models.Base.metadata.create_all(bind=engine)
@@ -24,6 +24,7 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(poll.router)
 app.include_router(stackoverflow.router)
+app.include_router(news.router)
 
 
 @app.get("/")

@@ -16,6 +16,12 @@ class PostCreate(PostBase):
 class UserOut(BaseModel):
     id: int
     email: EmailStr
+    name: str
+    surname: str
+    role: str
+    age: int
+    sex: str
+    profile_image: str
     created_at: datetime
 
     class Config:
@@ -118,3 +124,9 @@ class ProblemAnswerCommentCreate(BaseModel):
     problem_answer_id: int
     creator_id: int
     content: str
+
+
+class NewsCreate(BaseModel):
+    creator_id: int
+    content: str
+    images: Optional[List[str]] = []

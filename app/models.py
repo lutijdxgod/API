@@ -29,12 +29,16 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     name = Column(String, nullable=False, server_default="")
     surname = Column(String, nullable=False, server_default="")
-    role = Column(String)
-    age = Column(Integer)
-    sex = Column(String)
+    role = Column(String, server_default="-")
+    age = Column(Integer, nullable=False, server_default="1")
+    sex = Column(String, nullable=False, server_default="N")
     verification_code = Column(Integer, unique=True)
     password = Column(String, nullable=False)
-    profile_image = Column(String, nullable=True)
+    profile_image = Column(
+        String,
+        nullable=False,
+        server_default="https://mykaleidoscope.ru/x/uploads/posts/2023-05/1684818829_mykaleidoscope-ru-p-strizhka-stasa-pekhi-pinterest-69.jpg",
+    )
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
@@ -64,7 +68,11 @@ class PollQuestion(Base):
         nullable=False,
     )
     question = Column(String, nullable=False)
-    answers = Column(ARRAY(String, dimensions=1, zero_indexes=True), nullable=False)
+    answers = Column(
+        ARRAY(String, dimensions=1, zero_indexes=True),
+        nullable=False,
+        server_default="{}",
+    )
     min_responses = Column(Integer, server_default="1", nullable=False)
     max_responses = Column(Integer, server_default="1", nullable=False)
 
@@ -110,7 +118,11 @@ class ProblemAnswers(Base):
     problem_id = Column(Integer, ForeignKey("problems.id", ondelete="CASCADE"))
     creator_id = Column(Integer, ForeignKey("users.id", ondelete="NO ACTION"))
     content = Column(String, nullable=False)
-    images = Column(ARRAY(String, dimensions=1, zero_indexes=True), nullable=True)
+    images = Column(
+        ARRAY(String, dimensions=1, zero_indexes=True),
+        nullable=True,
+        server_default="{}",
+    )
     comments = Column(
         ARRAY(Integer, dimensions=1, zero_indexes=True),
         nullable=True,
@@ -161,3 +173,17 @@ class ProblemTags(Base):
 #     user_id = Column(
 #         Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
 #     )
+
+
+class News(Base):
+    __tablename__ = "news"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    creator_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    content = Column(String, nullable=False)
+    images = Column(ARRAY(String, dimensions=1, zero_indexes=True), server_default="{}")
+    created_at = Column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
+    )

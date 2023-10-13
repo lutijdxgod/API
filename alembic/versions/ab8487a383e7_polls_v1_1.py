@@ -25,7 +25,10 @@ def upgrade() -> None:
         sa.Column("poll_id", sa.Integer(), nullable=False),
         sa.Column("question", sa.String(), nullable=False),
         sa.Column(
-            "answers", ARRAY(sa.String, dimensions=1, zero_indexes=True), nullable=False
+            "answers",
+            ARRAY(sa.String, dimensions=1, zero_indexes=True),
+            nullable=False,
+            server_default="{}",
         ),
         sa.ForeignKeyConstraint(["poll_id"], ["polls.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("entry_id"),

@@ -27,7 +27,15 @@ def upgrade() -> None:
             server_default="{}",
         ),
     )
-    op.add_column("users", sa.Column("profile_image", sa.String(), nullable=True))
+    op.add_column(
+        "users",
+        sa.Column(
+            "profile_image",
+            sa.String(),
+            nullable="False",
+            server_default="https://mykaleidoscope.ru/x/uploads/posts/2023-05/1684818829_mykaleidoscope-ru-p-strizhka-stasa-pekhi-pinterest-69.jpg",
+        ),
+    )
     # ### end Alembic commands ###
 
 

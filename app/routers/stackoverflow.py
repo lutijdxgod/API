@@ -3,7 +3,6 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from .. import database, schemas, models
-from ..config import settings
 from typing import Optional, List
 
 router = APIRouter(prefix="/stackoverflow", tags=["Local Stack Overflow"])
@@ -79,7 +78,6 @@ async def get_problem(
                 "creator_role": creator["role"],
             }
         )
-        problem.pop("is_solved")  # убрал ненужный параметр при выводе
         tags_query = db.query(models.ProblemTags).filter(
             models.ProblemTags.problem_id == problem["id"]
         )
@@ -136,6 +134,7 @@ async def get_problem_answers(problem_id: int, db: Session = Depends(database.ge
                     {
                         "creator_name": creator["name"] + " " + creator["surname"],
                         "profile_image": creator["profile_image"],
+                        "creator_role": creator["role"],
                     }
                 )
 
@@ -162,6 +161,7 @@ async def get_problem_answers(problem_id: int, db: Session = Depends(database.ge
                     comment.update(
                         {
                             "creator_name": creator["name"] + " " + creator["surname"],
+                            # "creator_role": creator["role"],
                         }
                     )
 
