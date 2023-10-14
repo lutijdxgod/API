@@ -36,8 +36,8 @@ class User(Base):
     bio = Column(String(150), nullable=False, server_default="")
     rating = Column(Integer, nullable=False, server_default="0")
     works_at_company = Column(Integer, nullable=False, server_default="0")
-    amount_of_contacts = Column(Integer, nullable=False, server_defaut="0")
-    amount_of_problem_answers = Column(Integer, nullable=False, server_defaut="0")
+    amount_of_contacts = Column(Integer, nullable=False, server_default="0")
+    amount_of_problem_answers = Column(Integer, nullable=False, server_default="0")
     password = Column(String, nullable=False)
     profile_image = Column(
         String,
