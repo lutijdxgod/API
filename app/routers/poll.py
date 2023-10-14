@@ -56,16 +56,24 @@ async def get_active_polls(db: Session = Depends(database.get_db)):
     #     (jsonable_encoder(i)["id"], jsonable_encoder(i)["title"], jsonable_encoder(i)["title"])
     #     for i in active_polls_query.all()
     # ]
-    active_polls = []
-    for i in active_polls_query.all():
-        get_query = jsonable_encoder(i)
-        active_polls.append(
-            (get_query["id"], get_query["title"], get_query["is_anonymous"])
+    active_polls_to_add = []
+    active_polls = active_polls_query.all()
+    for i in active_polls:
+        poll = jsonable_encoder(i)
+        creator_id = poll["creator_id"]
+        creator = jsonable_encoder(
+            db.query(models.User).filter(models.User.id == creator_id).first()
         )
-
-    for id, title, anonymity in active_polls:
+        poll.update(
+            {
+                "creator_name": creator["name"] + " " + creator["surname"],
+                "creator_profile_image": creator["profile_image"],
+                "creator_role": creator["role"],
+            }
+        )
+        #
         title_questions_query = db.query(models.PollQuestion).filter(
-            models.PollQuestion.poll_id == id
+            models.PollQuestion.poll_id == poll["id"]
         )
         title_questions = title_questions_query.all()
 
@@ -76,11 +84,34 @@ async def get_active_polls(db: Session = Depends(database.get_db)):
             entry.pop("entry_id")
             to_return_questions.append(entry)
 
-        return_data.append(
-            {"name": title, "polls": to_return_questions, "is_anonymous": anonymity}
-        )  # polls это вопросы(Антоха попросил так назвать)
+        poll.update({"polls": to_return_questions})
 
-    return return_data
+        active_polls_to_add.append(poll)
+
+    # for i in active_polls_query.all():
+    #     get_query = jsonable_encoder(i)
+    #     active_polls.append(
+    #         (get_query["id"], get_query["title"], get_query["is_anonymous"])
+    #     )
+
+    # for id, title, anonymity in active_polls:
+    #     title_questions_query = db.query(models.PollQuestion).filter(
+    #         models.PollQuestion.poll_id == id
+    #     )
+    #     title_questions = title_questions_query.all()
+
+    #     to_return_questions = []
+
+    #     for entry in title_questions:
+    #         entry = jsonable_encoder(entry)
+    #         entry.pop("entry_id")
+    #         to_return_questions.append(entry)
+
+    # return_data.append(
+    #     {"name": title, "polls": to_return_questions, "is_anonymous": anonymity}
+    # )  # polls это вопросы(Антоха попросил так назвать)
+
+    return active_polls_to_add
 
 
 @router.get("/{id}")

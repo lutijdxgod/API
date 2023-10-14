@@ -29,7 +29,7 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     name = Column(String, nullable=False, server_default="")
     surname = Column(String, nullable=False, server_default="")
-    role = Column(String, server_default="-")
+    role = Column(String, nullable=False, server_default="-")
     age = Column(Integer, nullable=False, server_default="1")
     sex = Column(String, nullable=False, server_default="N")
     verification_code = Column(Integer, unique=True)
@@ -53,6 +53,7 @@ class Poll(Base):
     is_anonymous = Column(Boolean, server_default="False", nullable=False)
     # retractable_choices = Column(Boolean, server_default="True", nullable=False)
     creator_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
+    time_to_complete = Column(Integer, nullable=False)
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )

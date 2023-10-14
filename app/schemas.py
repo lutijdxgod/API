@@ -89,6 +89,7 @@ class PollCreate(BaseModel):
     creator_id: int
     is_anonymous: Optional[bool] = False
     is_active: Optional[bool] = True
+    time_to_complete: int
 
 
 class PollResponse(BaseModel):
