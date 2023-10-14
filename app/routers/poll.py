@@ -44,8 +44,6 @@ async def create_poll(
 
 @router.get("/active")
 async def get_active_polls(db: Session = Depends(database.get_db)):
-    return_data = []
-
     active_polls_query = db.query(models.Poll).filter(models.Poll.is_active == "True")
     if not (active_polls_query.first()):
         raise HTTPException(

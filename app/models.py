@@ -33,6 +33,11 @@ class User(Base):
     age = Column(Integer, nullable=False, server_default="1")
     sex = Column(String, nullable=False, server_default="N")
     verification_code = Column(Integer, unique=True)
+    bio = Column(String(150), nullable=False, server_default="")
+    rating = Column(Integer, nullable=False, server_default="0")
+    works_at_company = Column(Integer, nullable=False, server_default="0")
+    amount_of_contacts = Column(Integer, nullable=False, server_defaut="0")
+    amount_of_problem_answers = Column(Integer, nullable=False, server_defaut="0")
     password = Column(String, nullable=False)
     profile_image = Column(
         String,
