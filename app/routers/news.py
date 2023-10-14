@@ -12,12 +12,26 @@ router = APIRouter(prefix="/news", tags=["News"])
 async def create_some_news(
     news_to_add: schemas.NewsCreate, db: Session = Depends(database.get_db)
 ):
-    news = models.News(**news_to_add.dict())
+    news_to_add = news_to_add.dict()
+    creator_id = news_to_add["creator_id"]
+    news = models.News(**news_to_add)
     db.add(news)
     db.commit()
     db.refresh(news)
+    news_to_return = jsonable_encoder(news)
 
-    return news
+    creator = jsonable_encoder(
+        db.query(models.User).filter(models.User.id == creator_id).first()
+    )
+    news_to_return.update(
+        {
+            "creator_name": creator["name"] + " " + creator["surname"],
+            "creator_profile_image": creator["profile_image"],
+            "creator_role": creator["role"],
+        }
+    )
+
+    return news_to_return
 
 
 @router.get("/get")
@@ -35,7 +49,7 @@ async def get_news(db: Session = Depends(database.get_db)):
     for entry in news:
         entry = jsonable_encoder(entry)
         creator_id = entry["creator_id"]
-        entry.pop("creator_id")
+        # entry.pop("creator_id")  ## спорно, удалять или нет
         creator = jsonable_encoder(
             db.query(models.User).filter(models.User.id == creator_id).first()
         )
