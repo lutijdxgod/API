@@ -60,6 +60,7 @@ async def get_news(db: Session = Depends(database.get_db)):
                 "creator_role": creator["role"],
             }
         )
-    news_to_return.append(entry)
+
+        news_to_return.append(entry)
 
     return news_to_return
