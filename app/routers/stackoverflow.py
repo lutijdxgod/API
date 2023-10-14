@@ -19,10 +19,12 @@ async def post_problem(
     db.commit()
     db.refresh(new_problem)
     problem = jsonable_encoder(new_problem).copy()
-    problem_id = jsonable_encoder(problem)["id"]
+    problem_id = problem["id"]
 
     tags_to_upload = []
+    tags_themselves = []
     for tag in tags:
+        tags_themselves.append(tag)
         tag_query = db.query(models.Tags).filter(models.Tags.tag == tag)
         tag_itself = tag_query.first()
         if not tag_itself:
@@ -38,6 +40,19 @@ async def post_problem(
 
     db.add(models.ProblemTags(problem_id=problem_id, tags=tags_to_upload))
     db.commit()
+
+    creator_id = problem["creator_id"]
+    creator = jsonable_encoder(
+        db.query(models.User).filter(models.User.id == creator_id).first()
+    )
+    problem.update(
+        {
+            "tags": tags_themselves,
+            "creator_name": creator["name"] + " " + creator["surname"],
+            "creator_profile_image": creator["profile_image"],
+            "creator_role": creator["role"],
+        }
+    )
 
     return problem
 
