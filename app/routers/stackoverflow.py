@@ -233,6 +233,11 @@ async def get_answer_comments(
     answer_comments_query = db.query(models.ProblemAnswersComments).filter(
         models.ProblemAnswersComments.problem_answer_id == problem_answer_id
     )
-    comments_to_return = answer_comments_query.all()
+    comments = answer_comments_query.all()
+    comments_to_return = []
+    for comment in comments:
+        comment = jsonable_encoder(comment)
+        comment.pop("problem_answer_id")
+        comments_to_return.append(comment)
 
     return comments_to_return
