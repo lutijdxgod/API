@@ -224,3 +224,15 @@ async def create_answer_comment(
     db.commit()
 
     return comment_to_return
+
+
+@router.get("/problem_answer_comments")
+async def get_answer_comments(
+    problem_answer_id: int, db: Session = Depends(database.get_db)
+):
+    answer_comments_query = db.query(models.ProblemAnswersComments).filter(
+        models.ProblemAnswersComments.problem_answer_id == problem_answer_id
+    )
+    comments_to_return = answer_comments_query.all()
+
+    return comments_to_return
