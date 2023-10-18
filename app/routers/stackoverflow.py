@@ -239,7 +239,7 @@ async def get_answer_comments(
         comment = jsonable_encoder(comment)
         comment.pop("problem_answer_id")
         comment.pop("entry_id")
-        creator_id = comment.pop("creator_id")
+        creator_id = comment["creator_id"]
         creator = jsonable_encoder(
             db.query(models.User).filter(models.User.id == creator_id).first()
         )
