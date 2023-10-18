@@ -206,9 +206,11 @@ async def create_answer_comment(
 ):
     answer_id = answer_comment.dict()["problem_answer_id"]
     answer_comment = models.ProblemAnswersComments(**answer_comment.dict())
+
     db.add(answer_comment)
     db.commit()
     db.refresh(answer_comment)
+    comment_to_return = jsonable_encoder(answer_comment).copy()
 
     answer_query = db.query(models.ProblemAnswers).filter(
         models.ProblemAnswers.entry_id == answer_id
@@ -221,4 +223,4 @@ async def create_answer_comment(
     answer_query.update(answer, synchronize_session=False)
     db.commit()
 
-    return answer_query.first()
+    return comment_to_return
