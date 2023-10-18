@@ -238,6 +238,15 @@ async def get_answer_comments(
     for comment in comments:
         comment = jsonable_encoder(comment)
         comment.pop("problem_answer_id")
+        comment.pop("entry_id")
+        creator_id = comment.pop("creator_id")
+        creator = jsonable_encoder(
+            db.query(models.User).filter(models.User.id == creator_id).first()
+        )
+        if not creator:
+            comment.update({"creator_name": ""})
+        else:
+            comment.update({"creator_name": creator["name"] + " " + creator["surname"]})
         comments_to_return.append(comment)
 
     return comments_to_return
